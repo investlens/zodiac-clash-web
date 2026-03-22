@@ -8,8 +8,8 @@ type LeaderboardPlayer = {
   wins: number;
   battles: number;
   streak: number;
-  seasonRole: string;
-  genesisNumber: number | null;
+  winRate: number;
+  seasonBadge: string;
 };
 
 function rarityClasses(rarity: string) {
@@ -26,29 +26,13 @@ function rarityClasses(rarity: string) {
 }
 
 function rankClasses(rank: number) {
-  if (rank === 1) {
-    return "border-yellow-400/25 bg-yellow-400/[0.06]";
-  }
-  if (rank === 2) {
-    return "border-slate-300/20 bg-slate-300/[0.05]";
-  }
-  if (rank === 3) {
-    return "border-orange-400/20 bg-orange-400/[0.05]";
-  }
+  if (rank === 1) return "border-yellow-400/25 bg-yellow-400/[0.06]";
+  if (rank === 2) return "border-slate-300/20 bg-slate-300/[0.05]";
+  if (rank === 3) return "border-orange-400/20 bg-orange-400/[0.05]";
   return "border-white/10 bg-white/[0.04]";
 }
 
-function getBadge(player: LeaderboardPlayer) {
-  if (player.seasonRole === "Genesis" && player.genesisNumber) {
-    return `Genesis #${String(player.genesisNumber).padStart(3, "0")}`;
-  }
-  return player.seasonRole;
-}
-
 export function LeaderboardCard({ player }: { player: LeaderboardPlayer }) {
-  const winRate =
-    player.battles > 0 ? Math.round((player.wins / player.battles) * 100) : 0;
-
   return (
     <div
       className={`relative overflow-hidden rounded-[26px] border p-4 shadow-[0_10px_40px_rgba(0,0,0,0.2)] backdrop-blur-xl ${rankClasses(
@@ -86,8 +70,9 @@ export function LeaderboardCard({ player }: { player: LeaderboardPlayer }) {
               <span className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-cyan-200">
                 {player.zodiac}
               </span>
+
               <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-white/70">
-                {getBadge(player)}
+                {player.seasonBadge}
               </span>
             </div>
           </div>
@@ -96,7 +81,7 @@ export function LeaderboardCard({ player }: { player: LeaderboardPlayer }) {
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:w-[420px]">
           <MiniStat label="Wins" value={String(player.wins)} />
           <MiniStat label="Battles" value={String(player.battles)} />
-          <MiniStat label="Win Rate" value={`${winRate}%`} />
+          <MiniStat label="Win Rate" value={`${player.winRate}%`} />
           <MiniStat label="Streak" value={`${player.streak}W`} />
         </div>
       </div>

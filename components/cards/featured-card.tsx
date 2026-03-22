@@ -8,6 +8,7 @@ type FeaturedCardProps = {
     level: number;
     power: number;
     status: string;
+    portraitUrl?: string | null;
   };
 };
 
@@ -65,33 +66,41 @@ export function FeaturedCard({ card }: FeaturedCardProps) {
         </div>
 
         <div className="flex min-h-[280px] items-center justify-center rounded-[24px] border border-white/10 bg-[#0b1120]/80 p-4">
-          <div className="relative flex h-64 w-48 flex-col justify-between overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-b from-white/10 to-white/[0.03] p-4 shadow-[0_0_50px_rgba(34,211,238,0.08)]">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.14),transparent_35%),radial-gradient(circle_at_bottom,rgba(168,85,247,0.14),transparent_35%)]" />
+          {card.portraitUrl ? (
+            <img
+              src={card.portraitUrl}
+              alt={card.name}
+              className="h-[340px] w-[260px] rounded-[24px] border border-white/10 object-cover shadow-[0_0_40px_rgba(34,211,238,0.12)]"
+            />
+          ) : (
+            <div className="relative flex h-64 w-48 flex-col justify-between overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-b from-white/10 to-white/[0.03] p-4 shadow-[0_0_50px_rgba(34,211,238,0.08)]">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.14),transparent_35%),radial-gradient(circle_at_bottom,rgba(168,85,247,0.14),transparent_35%)]" />
 
-            <div className="relative">
-              <p className="text-[10px] uppercase tracking-[0.3em] text-white/45">
-                Origin Series
-              </p>
-              <p className="mt-2 text-lg font-semibold">{card.name}</p>
-              <p className="mt-1 text-xs text-white/55">{card.archetype}</p>
-            </div>
+              <div className="relative">
+                <p className="text-[10px] uppercase tracking-[0.3em] text-white/45">
+                  Origin Series
+                </p>
+                <p className="mt-2 text-lg font-semibold">{card.name}</p>
+                <p className="mt-1 text-xs text-white/55">{card.archetype}</p>
+              </div>
 
-            <div className="relative flex flex-1 items-center justify-center">
-              <div className="flex h-28 w-28 items-center justify-center rounded-full border border-cyan-300/20 bg-[radial-gradient(circle,rgba(34,211,238,0.3),rgba(17,24,39,0.12),transparent)] text-center">
-                <div>
-                  <p className="text-[9px] uppercase tracking-[0.28em] text-white/45">
-                    Zodiac
-                  </p>
-                  <p className="mt-1 text-lg font-semibold">{card.zodiac}</p>
+              <div className="relative flex flex-1 items-center justify-center">
+                <div className="flex h-28 w-28 items-center justify-center rounded-full border border-cyan-300/20 bg-[radial-gradient(circle,rgba(34,211,238,0.3),rgba(17,24,39,0.12),transparent)] text-center">
+                  <div>
+                    <p className="text-[9px] uppercase tracking-[0.28em] text-white/45">
+                      Zodiac
+                    </p>
+                    <p className="mt-1 text-lg font-semibold">{card.zodiac}</p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="relative flex items-center justify-between text-xs text-white/70">
-              <span>{card.rarity}</span>
-              <span>Lv. {card.level}</span>
+              <div className="relative flex items-center justify-between text-xs text-white/70">
+                <span>{card.rarity}</span>
+                <span>Lv. {card.level}</span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </section>

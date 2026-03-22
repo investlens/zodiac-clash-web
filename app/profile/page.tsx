@@ -6,6 +6,7 @@ import { StatPill } from "../../components/shared/stat-pill";
 import { profileMock } from "../../lib/mock-data";
 import { Crown, Gem, Sparkles, Star } from "lucide-react";
 import { useCurrentPlayer } from "../../hooks/use-current-player";
+import { ShareCardButton } from "../../components/shared/share-card-button";
 
 type TraitItem = {
   name: string;
@@ -92,6 +93,10 @@ export default function ProfilePage() {
               Live data error: {error}
             </p>
           ) : null}
+          <div className="mt-4">
+          <ShareCardButton telegramId={livePlayer?.telegramId} />
+        </div>
+
         </div>
 
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
@@ -140,6 +145,13 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="flex min-h-[280px] items-center justify-center rounded-[24px] border border-white/10 bg-[#0b1120]/80 p-4">
+                {livePlayer?.card_image_url ? (
+                  <img
+                    src={livePlayer.card_image_url}
+                    alt={player.name}
+                    className="h-64 w-48 rounded-[24px] object-cover border border-white/10 shadow-[0_0_40px_rgba(34,211,238,0.12)]"
+                  />
+                ) : (
                   <div className="relative flex h-52 w-40 flex-col justify-between overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-b from-white/10 to-white/[0.03] p-4 shadow-[0_0_40px_rgba(34,211,238,0.08)]">
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.14),transparent_35%),radial-gradient(circle_at_bottom,rgba(168,85,247,0.14),transparent_35%)]" />
 
@@ -167,7 +179,8 @@ export default function ProfilePage() {
                       <span>Lv. {player.level}</span>
                     </div>
                   </div>
-                </div>
+                )}
+              </div>
               </div>
             </div>
           </SectionCard>

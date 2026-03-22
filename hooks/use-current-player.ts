@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import {
   getTelegramInitData,
-  getTelegramUserUnsafe,
   initTelegramWebApp,
 } from "../lib/telegram/client";
 
@@ -26,7 +25,25 @@ export type CurrentPlayer = {
   seasonBadge: string;
   traits: Record<string, unknown>;
   traitPoints: Record<string, number>;
+  shieldUses?: number;
+  luckActive?: boolean;
+  dailyCombo?: number;
+  card_image_url?: string | null;
+  card_image_status?: string | null;
 };
+
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function waitForTelegramInitData() {
+  for (let i = 0; i < 20; i++) {
+    const rawInitData = getTelegramInitData();
+    if (rawInitData) return rawInitData;
+    await wait(150);
+  }
+  return "";
+}
 
 export function useCurrentPlayer() {
   const [player, setPlayer] = useState<CurrentPlayer | null>(null);
@@ -39,11 +56,28 @@ export function useCurrentPlayer() {
       try {
         initTelegramWebApp();
 
-        const rawInitData = getTelegramInitData();
-        const unsafeUser = getTelegramUserUnsafe();
+        const rawInitData = await waitForTelegramInitData();
 
-        if (!rawInitData || !unsafeUser?.id) {
+        if (!rawInitData) {
           setIsTelegram(false);
+
+          if (process.env.NODE_ENV !== "development") {
+            setLoading(false);
+            return;
+          }
+
+          const response = await fetch("/api/me", {
+            method: "GET",
+            cache: "no-store",
+          });
+
+          const json = await response.json();
+
+          if (!response.ok) {
+            throw new Error(json?.error || "Failed to load player");
+          }
+
+          setPlayer(json.player);
           setLoading(false);
           return;
         }
